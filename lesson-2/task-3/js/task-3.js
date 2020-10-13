@@ -155,6 +155,9 @@ function getToping(e) {
         rerending();
       }
       function rerending() {
+        document
+          .querySelector(".order")
+          .removeEventListener("click", getAnswer);
         document.querySelectorAll(".answer")[0].remove();
         document.querySelectorAll(".answer")[0].remove();
         document.querySelectorAll(".toping")[0].remove();
@@ -178,62 +181,19 @@ function getToping(e) {
 function getDressing(e) {
   if (e.target.classList.contains("answer")) {
     answer = e.target.dataset["answer"];
-    return;
-  }
-}
-/*
-
-  
-  
-  function getAnswer(e) {
-     {
-      
-      
-        /*
-        
-        answer = document.querySelectorAll(".answer");
-        answer[0].addEventListener("click", answerYes);
-        answer[1].addEventListener("click", answerNo);
-        function answerYes() {
-          answer[0].innerHTML = "Приправа";
-          answer[1].innerHTML = "Майонез";
-          order.addDressing();
-        }
-        function answerNo() {
-          order.calcPriceCalories();
-        }
-      }
-      return answer;
-    }
-  }
-  
-  let answer = document.querySelectorAll(".answer");
-  answer[0].addEventListener("click", answerYes);
-  answer[1].addEventListener("click", answerNo);
-  function answerYes() {
-    answer[0].remove();
-    answer[1].remove();
-    order.addToping();
-  }
-  function answerNo() {
-    answer[0].remove();
-    answer[1].remove();
-    document.querySelectorAll(".toping")[0].remove();
-    document.querySelectorAll(".toping")[0].remove();
-    document.querySelectorAll(".toping")[0].remove();
-    question.innerHTML = "<h2>Чем-нибудь заправить?</h2>";
-    orderHtml.insertAdjacentHTML("beforeend", `<div class="answer">Да</div>`);
-    orderHtml.insertAdjacentHTML("beforeend", `<div class="answer">Нет</div>`);
-    answer = document.querySelectorAll(".answer");
-    answer[0].addEventListener("click", answerYes);
-    answer[1].addEventListener("click", answerNo);
-    function answerYes() {
-      answer[0].innerHTML = "Приправа";
-      answer[1].innerHTML = "Майонез";
+    if (answer == "Yes") {
+      document.querySelectorAll(".answer")[0].innerHTML = "Приправа";
+      document.querySelectorAll(".answer")[1].innerHTML = "Майонез";
+      document
+        .querySelector(".order")
+        .removeEventListener("click", getDressing);
       order.addDressing();
     }
-    function answerNo() {
+    if (answer == "No") {
+      document
+        .querySelector(".order")
+        .removeEventListener("click", getDressing);
       order.calcPriceCalories();
     }
   }
-}*/
+}
