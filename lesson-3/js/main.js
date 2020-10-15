@@ -35,18 +35,17 @@ class itemsList {
       new item("02", "Socks", 50, "Socks.jpg"),
     ];
   }
-  async getData() {
-    console.log(this);
+  getData() {
     let url =
       "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/catalogData.json";
-    let response = await fetch(url);
-    let commits = await response.json(); // читаем ответ в формате JSON
-
-    for (let good of commits) {
-      this.items.push(new item(...Object.values(good)));
-    }
-    console.log(this);
-    list.renderList();
+    fetch(url)
+      .then((response) => response.json())
+      .then((commits) => {
+        for (let good of commits) {
+          this.items.push(new item(...Object.values(good)));
+        }
+        list.renderList();
+      });
   }
 
   renderList() {
@@ -112,7 +111,6 @@ class itemsCartList {
   }
 }
 const list = new itemsList();
-list.renderList();
 list.getData();
 const cartList = new itemsCartList();
 document.querySelector(".products").addEventListener("click", bayItem);
