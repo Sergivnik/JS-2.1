@@ -33,16 +33,18 @@ class itemsList {
     this.items = [
       new item("01", "Shirt", 150, "shirt.jpg"),
       new item("02", "Socks", 50, "Socks.jpg"),
-      new item("03", "Jacket", 350),
-      new item("04", "Shoes", 250),
     ];
   }
   async getData() {
+    console.log(this);
     let url =
       "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/catalogData.json";
     let response = await fetch(url);
-    let commits = await response.text(); // читаем ответ в формате JSON
-    this.items = JSON.parse(commits);
+    let commits = await response.json(); // читаем ответ в формате JSON
+    for (let good of commits) {
+      this.items.push(new item(...Object.values(good)));
+    }
+    console.log(this);
     list.renderList();
   }
 
@@ -131,6 +133,17 @@ document.querySelector(".btn-cart").addEventListener("click", () => {
     cart.classList.remove("invisible");
     cart.classList.add("visible");
     document.querySelector(".products").removeEventListener("click", bayItem);
+    document.querySelector(".products").addEventListener("click", closeCart);
+    function closeCart(e) {
+      if (!e.target.classList.contains("cart")) {
+        cart.classList.remove("visible");
+        cart.classList.add("invisible");
+        document.querySelector(".products").addEventListener("click", bayItem);
+        document
+          .querySelector(".products")
+          .removeEventListener("click", closeCart);
+      }
+    }
     cartList.renderList();
   } else {
     cart.classList.remove("visible");
