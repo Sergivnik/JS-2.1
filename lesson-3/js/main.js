@@ -41,6 +41,7 @@ class itemsList {
       "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/catalogData.json";
     let response = await fetch(url);
     let commits = await response.json(); // читаем ответ в формате JSON
+
     for (let good of commits) {
       this.items.push(new item(...Object.values(good)));
     }
@@ -111,8 +112,8 @@ class itemsCartList {
   }
 }
 const list = new itemsList();
+list.renderList();
 list.getData();
-
 const cartList = new itemsCartList();
 document.querySelector(".products").addEventListener("click", bayItem);
 function bayItem(e) {
