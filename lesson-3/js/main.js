@@ -1,3 +1,27 @@
+let url =
+  "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/catalogData.json";
+function makeGETRequest(url) {
+  return new Promise(function (resolve, reject) {
+    let xhr;
+    if (window.XMLHttpRequest) {
+      xhr = new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+      xhr = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xhr.open("GET", url, true);
+    xhr.send();
+    xhr.onload = function () {
+      if (xhr.status != 200) {
+        // анализируем HTTP-статус ответа, если статус не 200, то произошла ошибка
+        alert(`Ошибка ${xhr.status}: ${xhr.statusText}`); // Например, 404: Not Found
+      } else {
+        let responseObj = xhr.response;
+        resolve(responseObj);
+        //alert(responseObj);
+      }
+    };
+  });
+}
 class item {
   constructor(id, title, price, img = "noPhoto.jpg") {
     this.id = id;
@@ -36,17 +60,30 @@ class itemsList {
     ];
   }
   getData() {
+    makeGETRequest(url).then((goods) => {
+      let data = JSON.parse(goods);
+      for (let good of data) {
+        this.items.push(new item(...Object.values(good)));
+      }
+      list.renderList();
+    });
+  }
+  /*  getData() {
     let url =
       "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/catalogData.json";
     fetch(url)
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
       .then((commits) => {
         for (let good of commits) {
           this.items.push(new item(...Object.values(good)));
         }
         list.renderList();
       });
-  }
+  }*/
 
   renderList() {
     let listHtml = "";
