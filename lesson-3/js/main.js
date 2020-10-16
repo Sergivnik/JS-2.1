@@ -58,14 +58,21 @@ class itemsList {
       new item("01", "Shirt", 150, "shirt.jpg"),
       new item("02", "Socks", 50, "Socks.jpg"),
     ];
-  }
-  getData() {
-    makeGETRequest(url).then((goods) => {
-      let data = JSON.parse(goods);
+    this.getData().then((data) => {
       for (let good of data) {
         this.items.push(new item(...Object.values(good)));
       }
-      list.renderList();
+      this.renderList();
+    });
+  }
+  getData() {
+    return new Promise(function (resolve, reject) {
+      makeGETRequest(url).then((goods) => {
+        let data = JSON.parse(goods);
+
+        //list.renderList();
+        resolve(data);
+      });
     });
   }
   /*  getData() {
@@ -148,7 +155,7 @@ class itemsCartList {
   }
 }
 const list = new itemsList();
-list.getData();
+//list.getData();
 const cartList = new itemsCartList();
 document.querySelector(".products").addEventListener("click", bayItem);
 function bayItem(e) {
@@ -168,6 +175,7 @@ document.querySelector(".btn-cart").addEventListener("click", () => {
   if (cart.classList.contains("invisible")) {
     cart.classList.remove("invisible");
     cart.classList.add("visible");
+    cartList.renderList();
     document.querySelector(".products").removeEventListener("click", bayItem);
     document.querySelector(".products").addEventListener("click", closeCart);
     function closeCart(e) {
@@ -180,7 +188,6 @@ document.querySelector(".btn-cart").addEventListener("click", () => {
           .removeEventListener("click", closeCart);
       }
     }
-    cartList.renderList();
   } else {
     cart.classList.remove("visible");
     cart.classList.add("invisible");
