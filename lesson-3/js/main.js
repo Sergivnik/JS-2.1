@@ -10,6 +10,9 @@ function makeGETRequest(url) {
     }
     xhr.open("GET", url, true);
     xhr.send();
+    xhr.onerror = function () {
+      reject("error");
+    };
     xhr.onload = function () {
       if (xhr.status != 200) {
         alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
