@@ -12,12 +12,12 @@ function makeGETRequest(url) {
     xhr.send();
     xhr.onload = function () {
       if (xhr.status != 200) {
-        // анализируем HTTP-статус ответа, если статус не 200, то произошла ошибка
-        alert(`Ошибка ${xhr.status}: ${xhr.statusText}`); // Например, 404: Not Found
+        alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
+        reject("error");
       } else {
         let responseObj = xhr.response;
+        //reject("error");
         resolve(responseObj);
-        //alert(responseObj);
       }
     };
   });
@@ -58,40 +58,27 @@ class itemsList {
       new item("01", "Shirt", 150, "shirt.jpg"),
       new item("02", "Socks", 50, "Socks.jpg"),
     ];
-    this.getData().then((data) => {
-      for (let good of data) {
-        this.items.push(new item(...Object.values(good)));
-      }
-      this.renderList();
-    });
+    this.getData()
+      .then((data) => {
+        for (let good of data) {
+          this.items.push(new item(...Object.values(good)));
+        }
+        this.renderList();
+      })
+      .catch(alert);
   }
   getData() {
     return new Promise(function (resolve, reject) {
-      makeGETRequest(url).then((goods) => {
-        let data = JSON.parse(goods);
-
-        //list.renderList();
-        resolve(data);
-      });
+      makeGETRequest(url)
+        .then((goods) => {
+          let data = JSON.parse(goods);
+          resolve(data);
+        })
+        .catch(() => {
+          reject("error");
+        });
     });
   }
-  /*  getData() {
-    let url =
-      "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/catalogData.json";
-    fetch(url)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-      })
-      .then((commits) => {
-        for (let good of commits) {
-          this.items.push(new item(...Object.values(good)));
-        }
-        list.renderList();
-      });
-  }*/
-
   renderList() {
     let listHtml = "";
     for (let item of this.items) {
