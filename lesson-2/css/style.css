@@ -1,0 +1,123 @@
+body {
+  margin: 0;
+  max-width: 1920px;
+}
+
+header {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.title {
+  width: 80%;
+  text-align: center;
+}
+
+.title .header-h1 span {
+  -webkit-transform: rotate(30deg);
+          transform: rotate(30deg);
+  display: inline-block;
+  font-size: 50px;
+  color: #eec510;
+}
+
+.title p {
+  font-size: 25px;
+}
+
+.button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 20%;
+}
+
+.products {
+  margin: 0 5%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.product-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.buy-btn {
+  margin: 10px;
+}
+
+.cart {
+  position: absolute;
+  width: 700px;
+  height: 450px;
+  z-index: 2;
+  border: 1px solid #000;
+  background-color: #fff;
+  right: 150px;
+  top: 100px;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  font-size: 16px;
+}
+
+.cart-h2 {
+  width: 100%;
+  text-align: center;
+}
+
+.invisible {
+  display: none;
+}
+
+.visible {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.psum {
+  width: 100%;
+  text-align: center;
+}
+
+.cart-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 145px;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.add-btn, .del-btn {
+  width: 45%;
+  height: 20px;
+  font-size: 12px;
+  margin: 2%;
+}
+/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,49 @@
+h1 {
+  text-align: center;
+}
+.order {
+  display: flex;
+  flex-wrap: wrap;
+}
+.question {
+  width: 100%;
+  text-align: center;
+  background-color: yellow;
+  font-size: 50px;
+}
+.small {
+  width: 50%;
+  height: 150px;
+  text-align: center;
+  background-color: orange;
+  font-size: 100px;
+  border: 1px solid #000;
+  box-sizing: border-box;
+}
+.big {
+  width: 50%;
+  height: 150px;
+  text-align: center;
+  background-color: orange;
+  font-size: 100px;
+  border: 1px solid #000;
+  box-sizing: border-box;
+}
+.toping {
+  width: 33%;
+  height: 150px;
+  text-align: center;
+  background-color: orange;
+  font-size: 100px;
+  border: 1px solid #000;
+  box-sizing: border-box;
+}
+.answer {
+  width: 50%;
+  height: 150px;
+  text-align: center;
+  background-color: yellow;
+  font-size: 100px;
+  border: 1px solid #000;
+  box-sizing: border-box;
+}

@@ -1,0 +1,66 @@
+$max_width: 1920px
+
+body
+    margin: 0
+    max-width: $max_width
+header
+    width: 100%
+    display: flex
+.title
+    width: 80%
+    text-align: center
+    .header-h1
+        span
+            transform: rotate(30deg)
+            display: inline-block
+            font-size: 50px
+            color: #eec510
+    p
+        font-size: 25px
+.button
+    display: flex
+    justify-content: center
+    align-items: center
+    width: 20%
+.products
+    margin: 0 5%
+    display: flex
+    justify-content: space-around
+.product-item
+    display: flex
+    flex-direction: column
+    align-items: center
+.buy-btn
+    margin: 10px
+.cart
+    position: absolute
+    width: 700px
+    height: 450px
+    z-index: 2
+    border: 1px solid #000
+    background-color: #fff
+    right: 150px
+    top: 100px
+    justify-content: space-around
+    flex-wrap: wrap
+    font-size: 16px
+.cart-h2
+    width: 100%
+    text-align: center
+.invisible
+    display: none
+.visible
+    display: flex
+.psum
+    width: 100%
+    text-align: center
+.cart-item
+    display: flex
+    width: 145px
+    flex-wrap: wrap
+    justify-content: center
+.add-btn,.del-btn
+    width: 45%
+    height: 20px
+    font-size: 12px
+    margin: 2%
