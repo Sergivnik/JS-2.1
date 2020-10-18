@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="#">
+      <fieldset>
+        <legend>Форма обратной связи</legend>
+        <label for="name">Имя Фамилия(необязательно)</label>
+        <input id="name" placeholder="Ivan Ivanov" />
+        <label for="phone">Телефон</label>
+        <input id="phone" placeholder="+7(000)000-0000" />
+        <label for="email">Мыло</label>
+        <input id="email" />
+        <label>Сочинение</label>
+        <textarea id="text" cols="30" rows="10"></textarea>
+        <button>Отправить</button>
+      </fieldset>
+    </form>
+    <script>
+      let name = document.getElementById("name");
+      let phone = document.getElementById("phone");
+      let email = document.getElementById("email");
+      let btn = document.getElementsByTagName("button")[0];
+      btn.addEventListener("click", check);
+      function check() {
+        let valueName = name.value;
+        let valuePhone = phone.value;
+        let valueEmail = email.value;
+        let regexp = /^[a-zа-яё]+$|^([a-zа-яё]+\s[a-zа-яё]+)$/i;
+        if (!regexp.test(valueName)) {
+          name.className = "red";
+          alert("Чёт не то с именем");
+        } else {
+          name.className = "black";
+        }
+        regexp = /^\+7\(\d{3}\)\d{3}-\d{4}/i;
+        if (!regexp.test(valuePhone)) {
+          phone.className = "red";
+          alert("Чёт не то с телефоном");
+        } else {
+          phone.className = "black";
+        }
+        regexp = /^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/i;
+        if (!regexp.test(valueEmail)) {
+          email.className = "red";
+          alert("Чёт не то с мылом");
+        } else {
+          email.className = "black";
+        }
+      }
+    </script>
+  </body>
+</html>
