@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>eShopVue</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <script defer src="js/script.js"></script>
+    <div id="app">
+        <header>
+            <div class="title">
+                <h1 class="header-h1">Мелочевка <span>Б</span>обби</h1>
+                <p>
+                    Те, кто верит, налетай, те, кто жадный, убегай. Для вас свеженький
+                    товарчик, а для нас - солидный наварчик.
+                </p>
+            </div>
+            <div class="btn-block">
+                <input type="text" class="goods-search" v-model="searchLine"/>
+                <button class="search-button" type="button" @click="FilterGoods">Искать</button>
+                <button class="cart-button" type="button" @click="basketVisible">Корзина</button>
+            </div>
+        </header>
+        <main>
+            <div v-if="filteredGoods.length!=0" class="goods-list">
+                <div class="goods-item" v-for="good in filteredGoods">
+                    <h3>{{ good.product_name }}</h3>
+                    <img v-if="good.img !=undefinite" :src="good.img" width="100" height="100" alt="">
+                    <img v-else src="img/noPhoto.jpg" width="100" height="100" alt="">
+                    <p>Цена: {{ good.price }} рублей</p>
+                    <button>В корзину</button>
+                </div>
+            </div>
+            <div v-else class="goods-list">Нет данных</Div>
+            <div class="basket-list" v-if="isVisibleCart">
+
+            </div>
+        </main>
+        </div>
+
+    </div>
+</body>
+</html>
