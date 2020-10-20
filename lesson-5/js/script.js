@@ -7,6 +7,7 @@ const app = new Vue({
     filteredGoods: [],
     searchLine: "",
     isVisibleCart: false,
+    basketGoods: [],
   },
   methods: {
     async makeGETRequest(url) {
@@ -25,7 +26,17 @@ const app = new Vue({
     basketVisible() {
       this.isVisibleCart = !this.isVisibleCart;
     },
+    addGoodToBasket: function (e) {
+      let id = e.target.dataset["id"];
+      for (let good of this.filteredGoods) {
+        if (good.id_product == id) {
+          this.basketGoods.push(good);
+        }
+      }
+      console.log(this.basketGoods);
+    },
   },
+
   mounted() {
     this.makeGETRequest(`${API_URL}/catalogData.json`)
       .then((goods) => {
