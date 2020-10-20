@@ -28,9 +28,20 @@ const app = new Vue({
     },
     addGoodToBasket: function (e) {
       let id = e.target.dataset["id"];
+      let check = true;
       for (let good of this.filteredGoods) {
         if (good.id_product == id) {
-          this.basketGoods.push(good);
+          for (let goodBasket of this.basketGoods) {
+            if (goodBasket.id_product == id) {
+              check = false;
+              goodBasket.number++;
+            }
+          }
+          if (check) {
+            good.number = 1;
+            this.basketGoods.push(good);
+          }
+          break;
         }
       }
       console.log(this.basketGoods);
