@@ -38,8 +38,16 @@ const app = new Vue({
             }
           }
           if (check) {
-            good.number = 1;
-            this.basketGoods.push(good);
+            //Вот тут вопрос!!! Почему не работает код из строк 42-43 вернее не работает динамически?
+            //good.number = 1;
+            //this.basketGoods.push(good)
+            this.basketGoods.push({
+              id_product: good.id_product,
+              prise: good.price,
+              product_name: good.product_name,
+              img: good.img,
+              number: 1,
+            });
           }
           break;
         }
@@ -49,7 +57,11 @@ const app = new Vue({
       this.basketGoods[index].number++;
     },
     delGoodInBasket(index) {
-      this.basketGoods[index].number--;
+      if (this.basketGoods[index].number > 1) {
+        this.basketGoods[index].number--;
+      } else {
+        this.basketGoods.splice(index, 1);
+      }
     },
   },
 
