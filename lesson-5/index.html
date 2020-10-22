@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/Style.css">
     <title>eShopVue</title>
 </head>
 <body>
-    <script src="js/vue.js"></script>
+    <script src="js/vue.min.js"></script>
     <script defer src="js/script.js"></script>
     <div id="app">
         <header>
@@ -28,7 +28,7 @@
             <div v-if="filteredGoods.length!=0" class="goods-list">
                 <div class="goods-item" v-for="good in filteredGoods">
                     <h3>{{ good.product_name }}</h3>
-                    <img v-if="good.img !=undefinite" :src="good.img" width="100" height="100" alt="">
+                    <img v-if="good.img !=null" :src="good.img" width="100" height="100" alt="">
                     <img v-else src="img/noPhoto.jpg" width="100" height="100" alt="">
                     <p>Цена: {{ good.price }} рублей</p>
                     <button  :data-id="good.id_product" @click="addGoodToBasket" class="btn-to-cart">В корзину</button>
@@ -36,13 +36,14 @@
             </div>
             <div v-else class="goods-list">Нет данных</Div>
             <div class="basket-list" v-if="isVisibleCart">
-                <div class="goods-item" v-for="good in basketGoods">
+                <div class="goods-item" v-for="(good, index) in basketGoods">
                     <h3>{{ good.product_name }}</h3>
-                    <img v-if="good.img !=undefinite" :src="good.img" width="100" height="100" alt="">
+                    <img v-if="good.img !=null" :src="good.img" width="100" height="100" alt="">
                     <img v-else src="img/noPhoto.jpg" width="100" height="100" alt="">
                     <p>Цена: {{ good.price }} рублей</p>
                     <p>Количество: {{ good.number }}</p>
-                    <button :data-id="good.id_product" @click="addGoodToBasket" class="btn-to-cart">В корзину</button>
+                    <button :data-id="good.id_product" @click="addGoodInBasket(index)" class="btn-in-cart">Добавить</button>
+                    <button :data-id="good.id_product" @click="delGoodInBasket(index)" class="btn-in-cart">Удалить</button>
                 </div>
             </div>
         </main>

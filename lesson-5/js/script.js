@@ -44,7 +44,12 @@ const app = new Vue({
           break;
         }
       }
-      console.log(this.basketGoods);
+    },
+    addGoodInBasket(index) {
+      this.basketGoods[index].number++;
+    },
+    delGoodInBasket(index) {
+      this.basketGoods[index].number--;
     },
   },
 
@@ -65,7 +70,6 @@ const app = new Vue({
           product_name: "Футболка",
           img: "img/shirt.jpg",
         });
-        console.log(this.goods[0]);
       })
       .catch(() => {
         alert("Чёт не так пошло((");

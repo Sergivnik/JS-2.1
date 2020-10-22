@@ -5,7 +5,14 @@
         {
             "format": "expanded",
             "extensionName": ".css",
-            "savePath": null
+            "savePath": "~/../css/"
         }
+    ],
+    "sass.andStared": [
+    
+        "active",
+        "focus",
+        "hover",
+        "nth-child"
     ]
 }
