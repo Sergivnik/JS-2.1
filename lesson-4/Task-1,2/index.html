@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <textarea name="" id="textOld" cols="80" rows="20"> 
+He said, 'I don't have much free time.'
+    </textarea>
+    <textarea name="" id="textNew" cols="80" rows="20"></textarea>
+    <button>Change text all</button>
+    <button>Chang text partially</button>
+    <script>
+      let btn = document.getElementsByTagName("button")[0];
+      let btnPart = document.getElementsByTagName("button")[1];
+      console.log(btn);
+      let textOld = document.getElementById("textOld");
+      let textNew = document.getElementById("textNew");
+      btn.addEventListener("click", ChangeText);
+      btnPart.addEventListener("click", ChangeTextPart);
+      function ChangeText() {
+        let text = textOld.value;
+        const regexp = /'/g;
+        textNew.value = text.replace(regexp, '"');
+      }
+      function ChangeTextPart() {
+        let text = textOld.value;
+        const regexp = /(\B\')/g;
+        textNew.value = text.replace(regexp, '"');
+      }
+    </script>
+  </body>
+</html>

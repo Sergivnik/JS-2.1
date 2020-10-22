@@ -1,0 +1,11 @@
+fieldset {
+  width: 550px;
+  display: flex;
+  flex-direction: column;
+}
+.red {
+  border: 3px solid #f00;
+}
+.black {
+  border: 1px solid #000;
+}
