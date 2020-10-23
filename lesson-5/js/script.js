@@ -9,6 +9,15 @@ const app = new Vue({
     isVisibleCart: false,
     basketGoods: [],
   },
+  computed: {
+    calcSum() {
+      let sum = 0;
+      this.basketGoods.forEach((element) => {
+        sum = sum + element.price * element.number;
+      });
+      return sum;
+    },
+  },
   methods: {
     async makeGETRequest(url) {
       let response = await fetch(url);
@@ -41,13 +50,7 @@ const app = new Vue({
             //Вот тут вопрос!!! Почему не работает код из строк 42-43 вернее не работает динамически?
             //good.number = 1;
             //this.basketGoods.push(good)
-            this.basketGoods.push({
-              id_product: good.id_product,
-              prise: good.price,
-              product_name: good.product_name,
-              img: good.img,
-              number: 1,
-            });
+            this.basketGoods.push({ ...Object(good), number: 1 });
           }
           break;
         }
