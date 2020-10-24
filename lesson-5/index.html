@@ -7,7 +7,7 @@
     <title>eShopVue</title>
 </head>
 <body>
-    <script src="js/vue.min.js"></script>
+    <script src="js/vue.js"></script>
     <script defer src="js/script.js"></script>
     <div id="app">
         <header>
@@ -25,7 +25,7 @@
             </div>
         </header>
         <main>
-            <goods-list v-if="filteredGoods.length!=0" :goods="filteredGoods"></goods-list>
+            <goods-list v-if="filteredGoods.length!=0" :goods="filteredGoods" v-on:click-btn-list="addGoodToBasket"></goods-list>
             <div v-else class="goods-list">Нет данных</Div>
             <div class="basket-list" v-if="isVisibleCart">
                 <div class="goods-item" v-for="(good, index) in basketGoods">

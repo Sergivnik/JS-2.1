@@ -4,7 +4,7 @@ Vue.component("goods-list", {
   props: ["goods"],
   template: `
     <div class="goods-list">
-      <goods-item v-for="good in goods" :good="good"></goods-item>
+      <goods-item v-for="good in goods" :good="good" :key="good.id_product" v-on:click-btn="$emit('click-btn-list',$event)" ></goods-item>
     </div>`,
 });
 Vue.component("goods-item", {
@@ -15,7 +15,7 @@ Vue.component("goods-item", {
       <img v-if="good.img !=null" :src="good.img" width="100" height="100" alt="">
       <img v-else src="img/noPhoto.jpg" width="100" height="100" alt="">
       <p>Цена: {{ good.price }} рублей</p>
-      <button  :data-id="good.id_product" @click="app.addGoodToBasket" class="btn-to-cart">В корзину</button>
+      <button  v-on:click="$emit('click-btn',good.id_product)" :data-id="good.id_product" class="btn-to-cart">В корзину</button>
     </div>
   `,
 });
@@ -54,8 +54,7 @@ const app = new Vue({
     basketVisible() {
       this.isVisibleCart = !this.isVisibleCart;
     },
-    addGoodToBasket: function (e) {
-      let id = e.target.dataset["id"];
+    addGoodToBasket: function (id) {
       let check = true;
       for (let good of this.filteredGoods) {
         if (good.id_product == id) {
