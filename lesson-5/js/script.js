@@ -1,5 +1,6 @@
 const API_URL =
   "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses";
+const hostBus = new Vue();
 Vue.component("goods-list", {
   props: ["goods"],
   template: `
@@ -15,9 +16,58 @@ Vue.component("goods-item", {
       <img v-if="good.img !=null" :src="good.img" width="100" height="100" alt="">
       <img v-else src="img/noPhoto.jpg" width="100" height="100" alt="">
       <p>Цена: {{ good.price }} рублей</p>
-      <button  v-on:click="$emit('click-btn',good.id_product)" :data-id="good.id_product" class="btn-to-cart">В корзину</button>
+      <button  v-on:click="$emit('click-btn', good.id_product)" class="btn-to-cart">В корзину</button>
     </div>
   `,
+});
+Vue.component("field-search", {
+  props: ["text"],
+  template: `
+  <div>
+    <input class="goods-search" :value="text" @input="input"/>
+    <button class="search-button" type="button" @click="click_search">Искать</button>
+  </div>`,
+  methods: {
+    click_search() {
+      this.$emit("click_search", text);
+    },
+    input(e) {
+      text = e.target.value;
+    },
+  },
+});
+Vue.component("basket-list", {
+  props: ["goods", "sum"],
+  template: `
+    <div class="basket-list">
+      <basket-item v-for="(good,index) in goods" :good="good" :index="index" :key="good.id_product"></basket-item>
+      <p class="summ">Итого на сумму {{sum}} рублей</p>
+    </div>`,
+});
+Vue.component("basket-item", {
+  props: ["good", "index"],
+  template: `
+    <div class="goods-item">
+      <h3>{{ good.product_name }}</h3>
+      <img v-if="good.img !=null" :src="good.img" width="100" height="100" alt="">
+      <img v-else src="img/noPhoto.jpg" width="100" height="100" alt="">
+      <p>Цена: {{ good.price }} рублей</p>
+      <p>Количество: {{ good.number }}</p>
+      <button @click="addGoodInBasket" class="btn-in-cart">Добавить</button>
+      <button @click="delGoodInBasket" class="btn-in-cart">Удалить</button>
+    </div>
+  `,
+  methods: {
+    addGoodInBasket() {
+      hostBus.$emit("add-Good-In-Basket", this.index);
+    },
+    delGoodInBasket() {
+      hostBus.$emit("del-Good-In-Basket", this.index);
+    },
+  },
+});
+Vue.component("net-error", {
+  template: `<h2 class="h2error">Чёт не так пошло((</h2>`,
 });
 const app = new Vue({
   el: "#app",
@@ -27,6 +77,7 @@ const app = new Vue({
     searchLine: "",
     isVisibleCart: false,
     basketGoods: [],
+    isError: false,
   },
   computed: {
     calcSum() {
@@ -45,8 +96,9 @@ const app = new Vue({
         return goods;
       }
     },
-    FilterGoods() {
-      const regexp = new RegExp(this.searchLine, "i");
+    filterGoods: function (text) {
+      this.searchLine = text;
+      const regexp = new RegExp(text, "i");
       this.filteredGoods = this.goods.filter((good) =>
         regexp.test(good.product_name)
       );
@@ -65,9 +117,6 @@ const app = new Vue({
             }
           }
           if (check) {
-            //Вот тут вопрос!!! Почему не работает код из строк 42-43 вернее не работает динамически?
-            //good.number = 1;
-            //this.basketGoods.push(good)
             this.basketGoods.push({ ...Object(good), number: 1 });
           }
           break;
@@ -85,7 +134,14 @@ const app = new Vue({
       }
     },
   },
-
+  created() {
+    hostBus.$on("add-Good-In-Basket", this.addGoodInBasket);
+    hostBus.$on("del-Good-In-Basket", this.delGoodInBasket);
+  },
+  beforeDestroy() {
+    hostBus.$off("add-Good-In-Basket", this.addGoodInBasket);
+    hostBus.$off("del-Good-In-Basket", this.delGoodInBasket);
+  },
   mounted() {
     this.makeGETRequest(`${API_URL}/catalogData.json`)
       .then((goods) => {
@@ -105,7 +161,7 @@ const app = new Vue({
         });
       })
       .catch(() => {
-        alert("Чёт не так пошло((");
+        this.isError = true;
       });
   },
 });
