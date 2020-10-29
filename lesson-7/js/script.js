@@ -96,23 +96,28 @@ const app = new Vue({
         return goods;
       }
     },
-    makePOSTRequest(url, data, callback) {
-      let xhr;
-      if (window.XMLHttpRequest) {
-        xhr = new XMLHttpRequest();
-      } else if (window.ActiveXObject) {
-        xhr = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-          callback(xhr.response);
-        }
-      };
+    async makePOSTRequest(url, data) {
+      let response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=UTF-8" },
+        body: JSON.stringify(data),
+      });
+      // let xhr;
+      // if (window.XMLHttpRequest) {
+      //   xhr = new XMLHttpRequest();
+      // } else if (window.ActiveXObject) {
+      //   xhr = new ActiveXObject("Microsoft.XMLHTTP");
+      // }
+      // xhr.onreadystatechange = function () {
+      //   if (xhr.readyState === 4) {
+      //     callback(xhr.response);
+      //   }
+      // };
 
-      xhr.open("POST", url, true);
-      xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+      // xhr.open("POST", url, true);
+      // xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
 
-      xhr.send(data);
+      // xhr.send(data);
     },
 
     filterGoods: function (text) {
@@ -139,10 +144,7 @@ const app = new Vue({
             this.basketGoods.push({ ...Object(good), number: 1 });
             this.makePOSTRequest(
               "/addToBasket",
-              JSON.stringify(this.basketGoods[this.basketGoods.length - 1]),
-              (e) => {
-                alert(e);
-              }
+              this.basketGoods[this.basketGoods.length - 1]
             );
           }
           break;

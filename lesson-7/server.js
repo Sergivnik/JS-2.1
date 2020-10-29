@@ -21,19 +21,23 @@ app.post("/addToBasket", (req, res) => {
     if (err) {
       res.send('{"result": 0}');
     } else {
-      //console.log(data);
+      console.log(data);
       const cart = JSON.parse(data);
       cart.push(item);
 
-      fs.writeFile("./data/cart.json", JSON.stringify(cart), (err) => {
-        if (err) {
-          res.send('{"result": 0}');
-          //console.log("err");
-        } else {
-          res.send('{"result": 1}');
-          //console.log("good");
+      fs.writeFile(
+        "./data/cart.json",
+        JSON.stringify(cart, null, "\t"),
+        (err) => {
+          if (err) {
+            res.send('{"result": 0}');
+            console.log("err");
+          } else {
+            res.send('{"result": 1}');
+            console.log("good");
+          }
         }
-      });
+      );
     }
   });
 });
