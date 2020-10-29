@@ -24,9 +24,9 @@
             </div>
         </header>
         <main>
-            <goods-list v-if="filteredGoods.length!=0" :goods="filteredGoods" v-on:click-btn-list="addGoodToBasket"></goods-list>
+            <goods-list v-if="goods.length!=0" :goods="goods"></goods-list>
             <div v-else class="goods-list">Нет данных</div>
-            <basket-list :goods="basketGoods" :sum="calcSum" v-if="isVisibleCart" ></basket-list>
+            <basket-list v-show="isVisibleCart" ></basket-list>
             <net-error v-if="isError"></net-error>
         </main>
         </div>

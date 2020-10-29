@@ -5,7 +5,9 @@ Vue.component("goods-list", {
   props: ["goods"],
   template: `
     <div class="goods-list">
-      <goods-item v-for="good in goods" :good="good" :key="good.id_product" v-on:click-btn="$emit('click-btn-list',$event)" ></goods-item>
+      <goods-item v-for="good in goods" 
+        :good="good" :key="good.id_product">
+      </goods-item>
     </div>`,
 });
 Vue.component("goods-item", {
@@ -16,9 +18,14 @@ Vue.component("goods-item", {
       <img v-if="good.img !=null" :src="good.img" width="100" height="100" alt="">
       <img v-else src="img/noPhoto.jpg" width="100" height="100" alt="">
       <p>Цена: {{ good.price }} рублей</p>
-      <button  v-on:click="$emit('click-btn', good.id_product)" class="btn-to-cart">В корзину</button>
+      <button v-on:click="click_btn" class="btn-to-cart">В корзину</button>
     </div>
   `,
+  methods: {
+    click_btn() {
+      hostBus.$emit("addGoodToBasket", this.good);
+    },
+  },
 });
 Vue.component("field-search", {
   props: ["text"],
@@ -37,12 +44,68 @@ Vue.component("field-search", {
   },
 });
 Vue.component("basket-list", {
-  props: ["goods", "sum"],
+  //props: ["goods", "sum"],
+  data() {
+    return { basketGoods: [] };
+  },
   template: `
     <div class="basket-list">
-      <basket-item v-for="(good,index) in goods" :good="good" :index="index" :key="good.id_product"></basket-item>
+      <basket-item 
+        v-for="(good,index) in basketGoods" 
+        :good="good" 
+        :index="index" 
+        :key="good.id_product">
+      </basket-item>
       <p class="summ">Итого на сумму {{sum}} рублей</p>
     </div>`,
+  created() {
+    hostBus.$on("addGoodToBasket", this.addGoodToBasket);
+    hostBus.$on("addGoodInBasket", this.addInBasket);
+    hostBus.$on("delGoodInBasket", this.delInBasket);
+  },
+  beforeDestroy() {
+    hostBus.$off("addGoodToBasket");
+    hostBus.$off("addGoodInBasket");
+    hostBus.$off("delGoodInBasket");
+  },
+  computed: {
+    sum() {
+      let sum = 0;
+      this.basketGoods.forEach((element) => {
+        sum = sum + element.price * element.number;
+      });
+      return sum;
+    },
+  },
+  methods: {
+    addInBasket: function (index) {
+      this.basketGoods[index].number++;
+    },
+    delInBasket: function (index) {
+      if (this.basketGoods[index].number > 1) {
+        this.basketGoods[index].number--;
+      } else {
+        app.makePOSTRequest("/delFromBasket", this.basketGoods[index]);
+        this.basketGoods.splice(index, 1);
+      }
+    },
+    addGoodToBasket: function (good) {
+      let check = true;
+      for (let goodBasket of this.basketGoods) {
+        if (goodBasket.id_product == good.id_product) {
+          check = false;
+          goodBasket.number++;
+        }
+      }
+      if (check) {
+        this.basketGoods.push({ ...Object(good), number: 1 });
+        app.makePOSTRequest(
+          "/addToBasket",
+          this.basketGoods[this.basketGoods.length - 1]
+        );
+      }
+    },
+  },
 });
 Vue.component("basket-item", {
   props: ["good", "index"],
@@ -59,10 +122,10 @@ Vue.component("basket-item", {
   `,
   methods: {
     addGoodInBasket() {
-      hostBus.$emit("add-Good-In-Basket", this.index);
+      hostBus.$emit("addGoodInBasket", this.index);
     },
     delGoodInBasket() {
-      hostBus.$emit("del-Good-In-Basket", this.index);
+      hostBus.$emit("delGoodInBasket", this.index);
     },
   },
 });
@@ -73,23 +136,20 @@ const app = new Vue({
   el: "#app",
   data: {
     goods: [],
-    filteredGoods: [],
     searchLine: "",
     isVisibleCart: false,
     basketGoods: [],
     isError: false,
   },
   computed: {
-    calcSum() {
-      let sum = 0;
-      this.basketGoods.forEach((element) => {
-        sum = sum + element.price * element.number;
-      });
-      return sum;
-    },
+    //   filteredGoods() {
+    //     const regexp = new RegExp(this.searchLine, 'i');
+    //     return this.goods.filter((good) => good.product_name.match(regexp));
+    // },
   },
   methods: {
     async makeGETRequest(url) {
+      console.log(this);
       let response = await fetch(url);
       if (response.ok) {
         let goods = await response.text();
@@ -97,27 +157,12 @@ const app = new Vue({
       }
     },
     async makePOSTRequest(url, data) {
+      console.log(this);
       let response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json; charset=UTF-8" },
         body: JSON.stringify(data),
       });
-      // let xhr;
-      // if (window.XMLHttpRequest) {
-      //   xhr = new XMLHttpRequest();
-      // } else if (window.ActiveXObject) {
-      //   xhr = new ActiveXObject("Microsoft.XMLHTTP");
-      // }
-      // xhr.onreadystatechange = function () {
-      //   if (xhr.readyState === 4) {
-      //     callback(xhr.response);
-      //   }
-      // };
-
-      // xhr.open("POST", url, true);
-      // xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
-
-      // xhr.send(data);
     },
 
     filterGoods: function (text) {
@@ -130,63 +175,11 @@ const app = new Vue({
     basketVisible() {
       this.isVisibleCart = !this.isVisibleCart;
     },
-    addGoodToBasket: function (id) {
-      let check = true;
-      for (let good of this.filteredGoods) {
-        if (good.id_product == id) {
-          for (let goodBasket of this.basketGoods) {
-            if (goodBasket.id_product == id) {
-              check = false;
-              goodBasket.number++;
-            }
-          }
-          if (check) {
-            this.basketGoods.push({ ...Object(good), number: 1 });
-            this.makePOSTRequest(
-              "/addToBasket",
-              this.basketGoods[this.basketGoods.length - 1]
-            );
-          }
-          break;
-        }
-      }
-    },
-    addGoodInBasket(index) {
-      this.basketGoods[index].number++;
-    },
-    delGoodInBasket(index) {
-      if (this.basketGoods[index].number > 1) {
-        this.basketGoods[index].number--;
-      } else {
-        this.basketGoods.splice(index, 1);
-      }
-    },
-  },
-  created() {
-    hostBus.$on("add-Good-In-Basket", this.addGoodInBasket);
-    hostBus.$on("del-Good-In-Basket", this.delGoodInBasket);
-  },
-  beforeDestroy() {
-    hostBus.$off("add-Good-In-Basket", this.addGoodInBasket);
-    hostBus.$off("del-Good-In-Basket", this.delGoodInBasket);
   },
   mounted() {
     this.makeGETRequest(`/data`)
       .then((goods) => {
         this.goods = JSON.parse(goods);
-        this.filteredGoods = JSON.parse(goods);
-        this.goods.push({
-          id_product: "008",
-          price: 150,
-          product_name: "Футболка",
-          img: "img/shirt.jpg",
-        });
-        this.filteredGoods.push({
-          id_product: "008",
-          price: 150,
-          product_name: "Футболка",
-          img: "img/shirt.jpg",
-        });
       })
       .catch(() => {
         this.isError = true;
