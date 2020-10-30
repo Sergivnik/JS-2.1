@@ -44,7 +44,6 @@ Vue.component("field-search", {
   },
 });
 Vue.component("basket-list", {
-  //props: ["goods", "sum"],
   data() {
     return { basketGoods: [] };
   },
@@ -58,6 +57,15 @@ Vue.component("basket-list", {
       </basket-item>
       <p class="summ">Итого на сумму {{sum}} рублей</p>
     </div>`,
+  mounted() {
+    this.makeGETRequest("/addToBasket")
+      .then((goods) => {
+        this.basketGoods = JSON.parse(goods);
+      })
+      .catch(() => {
+        this.isError = true;
+      });
+  },
   created() {
     hostBus.$on("addGoodToBasket", this.addGoodToBasket);
     hostBus.$on("addGoodInBasket", this.addInBasket);
@@ -78,6 +86,13 @@ Vue.component("basket-list", {
     },
   },
   methods: {
+    async makeGETRequest(url) {
+      let response = await fetch(url);
+      if (response.ok) {
+        let goods = await response.text();
+        return goods;
+      }
+    },
     addInBasket: function (index) {
       this.basketGoods[index].number++;
     },
@@ -149,7 +164,6 @@ const app = new Vue({
   },
   methods: {
     async makeGETRequest(url) {
-      console.log(this);
       let response = await fetch(url);
       if (response.ok) {
         let goods = await response.text();
@@ -157,7 +171,6 @@ const app = new Vue({
       }
     },
     async makePOSTRequest(url, data) {
-      console.log(this);
       let response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json; charset=UTF-8" },

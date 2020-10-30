@@ -10,28 +10,27 @@ app.get("/data", (req, res) => {
     res.send(goods);
   });
 });
+app.get("/addToBasket", (req, res) => {
+  fs.readFile("./data/cart.json", "utf8", (err, data) => {
+    let goods = JSON.parse(data);
+    res.send(goods);
+  });
+});
 
 app.post("/addToBasket", (req, res) => {
   console.log(req.body);
-  const item = req.body;
+  const newGood = req.body;
   fs.readFile("./data/cart.json", "utf8", (err, data) => {
-    if (err) {
-      res.send('{"result": 0}');
-    } else {
-      const cart = JSON.parse(data);
-      cart.push(item);
+    const goods = JSON.parse(data);
 
-      fs.writeFile(
-        "./data/cart.json",
-        JSON.stringify(cart, null, "\t"),
-        (err) => {
-          if (err) {
-            res.send('{"result": 0}');
-          } else {
-            res.send('{"result": 1}');
-          }
-        }
-      );
+    if (goods.find((good) => good.id_product == newGood.id_product)) {
+      res
+        .status("400")
+        .json({ error: "already have good with id " + newGood.id_product });
+    } else {
+      goods.push(newGood);
+      fs.writeFileSync("./data/cart.json", JSON.stringify(goods, null, "\t"));
+      res.json({ result: "added good ok", id: newGood.id_product });
     }
   });
 });

@@ -1,1 +1,27 @@
-[]
+[
+	{
+		"id_product": "008",
+		"product_name": "Футболка",
+		"price": 150,
+		"img": "img/shirt.jpg",
+		"number": 1
+	},
+	{
+		"id_product": "005",
+		"product_name": "Ноутбук",
+		"price": 400,
+		"number": 1
+	},
+	{
+		"id_product": "001",
+		"product_name": "Мышка",
+		"price": 100,
+		"number": 1
+	},
+	{
+		"id_product": "003",
+		"product_name": "Колонки",
+		"price": 130,
+		"number": 1
+	}
+]
