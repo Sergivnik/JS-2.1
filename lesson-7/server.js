@@ -18,7 +18,6 @@ app.get("/addToBasket", (req, res) => {
 });
 
 app.post("/addToBasket", (req, res) => {
-  console.log(req.body);
   const newGood = req.body;
   fs.readFile("./data/cart.json", "utf8", (err, data) => {
     const goods = JSON.parse(data);
@@ -36,7 +35,6 @@ app.post("/addToBasket", (req, res) => {
 });
 
 app.post("/delFromBasket", (req, res) => {
-  console.log(req.body);
   const item = req.body;
   fs.readFile("./data/cart.json", "utf8", (err, data) => {
     if (err) {
@@ -45,6 +43,31 @@ app.post("/delFromBasket", (req, res) => {
       let cart = JSON.parse(data);
       let index = cart.findIndex((elem) => elem.id_product == item.id_product);
       cart.splice(index, 1);
+
+      fs.writeFile(
+        "./data/cart.json",
+        JSON.stringify(cart, null, "\t"),
+        (err) => {
+          if (err) {
+            res.send('{"result": 0}');
+          } else {
+            res.send('{"result": 1}');
+          }
+        }
+      );
+    }
+  });
+});
+app.post("/changeBasket", (req, res) => {
+  console.log(req.body);
+  const item = req.body;
+  fs.readFile("./data/cart.json", "utf8", (err, data) => {
+    if (err) {
+      res.send('{"result": 0}');
+    } else {
+      let cart = JSON.parse(data);
+      let index = cart.findIndex((elem) => elem.id_product == item.id_product);
+      cart[index].number = item.number;
 
       fs.writeFile(
         "./data/cart.json",

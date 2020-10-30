@@ -3,11 +3,11 @@ const API_URL =
 const hostBus = new Vue();
 Vue.component("goods-list", {
   props: ["goods"],
-  data(){
-    return {filteredGoods:[]}
+  data() {
+    return { filteredGoods: [] };
   },
-  mounted(){
-    this.filteredGoods=this.goods.slice();
+  mounted() {
+    this.filteredGoods = this.goods.slice();
   },
   template: `
     <div class="goods-list">
@@ -15,15 +15,17 @@ Vue.component("goods-list", {
         :good="good" :key="good.id_product">
       </goods-item>
     </div>`,
-  created(){
+  created() {
     hostBus.$on("clickSearch", this.filterGoods);
   },
-  methods:{
-       filterGoods(searchLine) {
-        const regexp = new RegExp(searchLine, 'i');
-        this.filteredGoods=this.goods.filter((good) => good.product_name.match(regexp));
-     },
-  }
+  methods: {
+    filterGoods(searchLine) {
+      const regexp = new RegExp(searchLine, "i");
+      this.filteredGoods = this.goods.filter((good) =>
+        good.product_name.match(regexp)
+      );
+    },
+  },
 });
 Vue.component("goods-item", {
   props: ["good"],
@@ -36,7 +38,7 @@ Vue.component("goods-item", {
       <button v-on:click="click_btn" class="btn-to-cart">В корзину</button>
     </div>
   `,
-  
+
   methods: {
     click_btn() {
       hostBus.$emit("addGoodToBasket", this.good);
@@ -44,10 +46,10 @@ Vue.component("goods-item", {
   },
 });
 Vue.component("field-search", {
-  data(){
+  data() {
     return {
-      searchLine: ""
-    }
+      searchLine: "",
+    };
   },
   template: `
   <div>
@@ -65,7 +67,7 @@ Vue.component("field-search", {
   methods: {
     click_search() {
       hostBus.$emit("clickSearch", this.searchLine);
-    }
+    },
   },
 });
 Vue.component("basket-list", {
@@ -120,10 +122,12 @@ Vue.component("basket-list", {
     },
     addInBasket: function (index) {
       this.basketGoods[index].number++;
+      app.makePOSTRequest("/changeBasket", this.basketGoods[index]);
     },
     delInBasket: function (index) {
       if (this.basketGoods[index].number > 1) {
         this.basketGoods[index].number--;
+        app.makePOSTRequest("/changeBasket", this.basketGoods[index]);
       } else {
         app.makePOSTRequest("/delFromBasket", this.basketGoods[index]);
         this.basketGoods.splice(index, 1);
@@ -194,14 +198,6 @@ const app = new Vue({
         body: JSON.stringify(data),
       });
     },
-
-    // filterGoods: function (text) {
-    //   this.searchLine = text;
-    //   const regexp = new RegExp(text, "i");
-    //   this.filteredGoods = this.goods.filter((good) =>
-    //     regexp.test(good.product_name)
-    //   );
-    // },
     basketVisible() {
       this.isVisibleCart = !this.isVisibleCart;
     },
