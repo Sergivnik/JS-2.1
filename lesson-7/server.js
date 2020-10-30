@@ -32,6 +32,19 @@ app.post("/addToBasket", (req, res) => {
       res.json({ result: "added good ok", id: newGood.id_product });
     }
   });
+  fs.readFile("./data/stats.json", "utf8", (err, data) => {
+    const listActivities = JSON.parse(data);
+    const newActivity = {
+      date: new Date(),
+      action: "Добавление в корзину",
+      item: newGood.product_name,
+    };
+    listActivities.push(newActivity);
+    fs.writeFileSync(
+      "./data/stats.json",
+      JSON.stringify(listActivities, null, "\t")
+    );
+  });
 });
 
 app.post("/delFromBasket", (req, res) => {
@@ -57,6 +70,19 @@ app.post("/delFromBasket", (req, res) => {
       );
     }
   });
+  fs.readFile("./data/stats.json", "utf8", (err, data) => {
+    const listActivities = JSON.parse(data);
+    const newActivity = {
+      date: new Date(),
+      action: "Удаление из корзины",
+      item: item.product_name,
+    };
+    listActivities.push(newActivity);
+    fs.writeFileSync(
+      "./data/stats.json",
+      JSON.stringify(listActivities, null, "\t")
+    );
+  });
 });
 app.post("/changeBasket", (req, res) => {
   console.log(req.body);
@@ -81,6 +107,19 @@ app.post("/changeBasket", (req, res) => {
         }
       );
     }
+  });
+  fs.readFile("./data/stats.json", "utf8", (err, data) => {
+    const listActivities = JSON.parse(data);
+    const newActivity = {
+      date: new Date(),
+      action: "Изменение количества",
+      item: item.product_name,
+    };
+    listActivities.push(newActivity);
+    fs.writeFileSync(
+      "./data/stats.json",
+      JSON.stringify(listActivities, null, "\t")
+    );
   });
 });
 app.listen(3000, function () {

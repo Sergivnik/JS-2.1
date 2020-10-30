@@ -1,9 +1,9 @@
 [
 	{
-		"id_product": "001",
-		"product_name": "Мышка",
-		"price": 100,
-		"img": "img/mouse.jpg",
+		"id_product": "002",
+		"product_name": "Клавиатура",
+		"price": 200,
+		"img": "img/keyboard.jpg",
 		"number": 1
 	}
 ]
