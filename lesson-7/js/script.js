@@ -3,12 +3,27 @@ const API_URL =
 const hostBus = new Vue();
 Vue.component("goods-list", {
   props: ["goods"],
+  data(){
+    return {filteredGoods:[]}
+  },
+  mounted(){
+    this.filteredGoods=this.goods.slice();
+  },
   template: `
     <div class="goods-list">
-      <goods-item v-for="good in goods" 
+      <goods-item v-for="good in filteredGoods" 
         :good="good" :key="good.id_product">
       </goods-item>
     </div>`,
+  created(){
+    hostBus.$on("clickSearch", this.filterGoods);
+  },
+  methods:{
+       filterGoods(searchLine) {
+        const regexp = new RegExp(searchLine, 'i');
+        this.filteredGoods=this.goods.filter((good) => good.product_name.match(regexp));
+     },
+  }
 });
 Vue.component("goods-item", {
   props: ["good"],
@@ -21,6 +36,7 @@ Vue.component("goods-item", {
       <button v-on:click="click_btn" class="btn-to-cart">В корзину</button>
     </div>
   `,
+  
   methods: {
     click_btn() {
       hostBus.$emit("addGoodToBasket", this.good);
@@ -28,19 +44,28 @@ Vue.component("goods-item", {
   },
 });
 Vue.component("field-search", {
-  props: ["text"],
+  data(){
+    return {
+      searchLine: ""
+    }
+  },
   template: `
   <div>
-    <input class="goods-search" :value="text" @input="input"/>
-    <button class="search-button" type="button" @click="click_search">Искать</button>
+    <input 
+      class="goods-search" 
+      v-model="searchLine"
+    />
+    <button 
+      class="search-button" 
+      type="button" 
+      @click="click_search">
+      Искать
+    </button>
   </div>`,
   methods: {
     click_search() {
-      this.$emit("click_search", text);
-    },
-    input(e) {
-      text = e.target.value;
-    },
+      hostBus.$emit("clickSearch", this.searchLine);
+    }
   },
 });
 Vue.component("basket-list", {
@@ -151,16 +176,8 @@ const app = new Vue({
   el: "#app",
   data: {
     goods: [],
-    searchLine: "",
     isVisibleCart: false,
-    basketGoods: [],
     isError: false,
-  },
-  computed: {
-    //   filteredGoods() {
-    //     const regexp = new RegExp(this.searchLine, 'i');
-    //     return this.goods.filter((good) => good.product_name.match(regexp));
-    // },
   },
   methods: {
     async makeGETRequest(url) {
@@ -178,13 +195,13 @@ const app = new Vue({
       });
     },
 
-    filterGoods: function (text) {
-      this.searchLine = text;
-      const regexp = new RegExp(text, "i");
-      this.filteredGoods = this.goods.filter((good) =>
-        regexp.test(good.product_name)
-      );
-    },
+    // filterGoods: function (text) {
+    //   this.searchLine = text;
+    //   const regexp = new RegExp(text, "i");
+    //   this.filteredGoods = this.goods.filter((good) =>
+    //     regexp.test(good.product_name)
+    //   );
+    // },
     basketVisible() {
       this.isVisibleCart = !this.isVisibleCart;
     },
