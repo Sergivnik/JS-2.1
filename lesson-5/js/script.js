@@ -96,6 +96,25 @@ const app = new Vue({
         return goods;
       }
     },
+    makePOSTRequest(url, data, callback) {
+      let xhr;
+      if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+      } else if (window.ActiveXObject) {
+        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          callback(xhr.response);
+        }
+      };
+
+      xhr.open("POST", url, true);
+      xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+
+      xhr.send(data);
+    },
+
     filterGoods: function (text) {
       this.searchLine = text;
       const regexp = new RegExp(text, "i");
@@ -118,6 +137,13 @@ const app = new Vue({
           }
           if (check) {
             this.basketGoods.push({ ...Object(good), number: 1 });
+            this.makePOSTRequest(
+              "/addToBasket",
+              JSON.stringify(this.basketGoods[this.basketGoods.length - 1]),
+              (e) => {
+                alert(e);
+              }
+            );
           }
           break;
         }
@@ -143,18 +169,18 @@ const app = new Vue({
     hostBus.$off("del-Good-In-Basket", this.delGoodInBasket);
   },
   mounted() {
-    this.makeGETRequest(`${API_URL}/catalogData.json`)
+    this.makeGETRequest(`/data`)
       .then((goods) => {
         this.goods = JSON.parse(goods);
         this.filteredGoods = JSON.parse(goods);
         this.goods.push({
-          id_product: "01",
+          id_product: "008",
           price: 150,
           product_name: "Футболка",
           img: "img/shirt.jpg",
         });
         this.filteredGoods.push({
-          id_product: "01",
+          id_product: "008",
           price: 150,
           product_name: "Футболка",
           img: "img/shirt.jpg",
