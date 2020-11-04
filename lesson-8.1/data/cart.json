@@ -1,0 +1,16 @@
+[
+	{
+		"id_product": "008",
+		"product_name": "Футболка",
+		"price": 150,
+		"img": "img/shirt.jpg",
+		"number": 2
+	},
+	{
+		"id_product": "001",
+		"product_name": "Мышка",
+		"price": 100,
+		"img": "img/mouse.jpg",
+		"number": 1
+	}
+]
